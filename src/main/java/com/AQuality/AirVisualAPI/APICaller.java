@@ -2,7 +2,6 @@ package com.AQuality.AirVisualAPI;
 
 import com.AQuality.AirVisualAPI.beans.MainBean;
 import com.AQuality.core.Util;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.BufferedReader;

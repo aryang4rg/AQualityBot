@@ -9,6 +9,6 @@ public class CountryListCaller extends APICaller<Countries>
 {
     public CountryListCaller() throws Exception
     {
-        super(new URL("https://api.airvisual.com/v2/countries?key=" + Util.AIRVISUALAPIKEY), Countries.class);
+        super(new URL("https://api.airvisual.com/v2/countries?key=" + AIRVISUALAPIKEY), Countries.class);
     }
 }
