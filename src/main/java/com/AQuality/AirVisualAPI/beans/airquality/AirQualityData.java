@@ -3,7 +3,7 @@ package com.AQuality.AirVisualAPI.beans.airquality;
 import com.AQuality.AirVisualAPI.beans.Bean;
 
 import java.io.Serializable;
-
+//
 public class AirQualityData implements Bean, Serializable {
 
     private String city;
