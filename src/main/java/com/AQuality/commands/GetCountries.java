@@ -1,7 +1,7 @@
 package com.AQuality.commands;
 
-import com.AQuality.AirVisualAPI.beans.Country;
-import com.AQuality.AirVisualAPI.CountryList;
+import com.AQuality.AirVisualAPI.beans.countries.Country;
+import com.AQuality.AirVisualAPI.CountryListCaller;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.entity.channel.MessageChannel;
 import discord4j.rest.util.Color;
@@ -15,7 +15,7 @@ public class GetCountries implements Consumer<MessageCreateEvent> {
         MessageChannel channel = messageCreateEvent.getMessage().getChannel().block();
         try
         {
-            CountryList list = new CountryList();
+            CountryListCaller list = new CountryListCaller();
 
             channel.createEmbed(
                     (spec) ->

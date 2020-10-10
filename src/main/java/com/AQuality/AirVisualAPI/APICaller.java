@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
@@ -17,6 +18,7 @@ public abstract class APICaller<T extends MainBean>
     public static final String AIRVISUALAPIKEY = Util.AIRVISUALAPIKEY;
     ObjectMapper objectMapper = new ObjectMapper();
     T object;
+    Class<? extends  T> clazz;
 
     public T getObject() {
         return object;
@@ -26,11 +28,12 @@ public abstract class APICaller<T extends MainBean>
         this.object = object;
     }
 
-    public APICaller(URL url) throws Exception
+    public APICaller(URL url, Class<? extends T> clazz) throws Exception
     {
+        this.clazz = clazz;
         this.url = url;
         connection = url.openConnection();
-        object = objectMapper.readValue(urlReader(), new TypeReference<T>() {});
+        object = objectMapper.readValue(urlReader(), clazz);
         if (!object.getStatus().equalsIgnoreCase("success"))
         {
             throw new APIException("Error: " + object.getStatus());
@@ -66,4 +69,15 @@ public abstract class APICaller<T extends MainBean>
         return allTokens.toString();
     }
 
+    @Override
+    public String toString() {
+        try {
+            return objectMapper.writeValueAsString(object);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return clazz.toString();
+    }
 }

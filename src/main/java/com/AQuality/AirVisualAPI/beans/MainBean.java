@@ -1,10 +1,7 @@
 package com.AQuality.AirVisualAPI.beans;
 
-import java.util.List;
 
-public abstract class MainBean implements Bean
+public interface MainBean
 {
-    public abstract String getStatus();
-    public abstract List<Country> getData();
-
+    String getStatus();
 }
