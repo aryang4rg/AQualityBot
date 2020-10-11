@@ -1,12 +1,11 @@
 package com.AQuality.AirVisualAPI.beans.countries;
 
-import com.AQuality.AirVisualAPI.beans.Bean;
 import com.AQuality.AirVisualAPI.beans.MainBean;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class Countries implements Serializable, Bean, MainBean {
+public class Countries extends MainBean implements Serializable {
 
     private String status;
     private List<Country> data = null;
@@ -14,6 +13,7 @@ public class Countries implements Serializable, Bean, MainBean {
     public String getStatus() {
         return status;
     }
+
 
     public void setStatus(String status) {
         this.status = status;

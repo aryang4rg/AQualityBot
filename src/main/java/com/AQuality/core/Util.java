@@ -1,5 +1,6 @@
 package com.AQuality.core;
 
+import com.AQuality.commands.Command;
 import com.AQuality.commands.GetCountries;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import discord4j.core.event.domain.message.MessageCreateEvent;
@@ -8,7 +9,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class Util
 {
@@ -16,7 +16,7 @@ public class Util
     public static final String AIRVISUALAPIKEY;
     public static final String DISCORDBOTTOKEN;
 
-    public static HashMap<String, Consumer<MessageCreateEvent>> commandToConsumer= new HashMap<>();
+    public static HashMap<String, Command<MessageCreateEvent>> commandToConsumer= new HashMap<>();
 
     static
     {
@@ -115,14 +115,14 @@ public class Util
 
     /**
      *
-     * @param command prerequisete: string has already been passed through the commandGetter() method
+     * @param command prerequisite: string has already been passed through the getCommand() method
      * @param event event where the command was ran
      */
-    public static void commandRunner(String command, MessageCreateEvent event )
+    public static void runCommand(String command, MessageCreateEvent event )
     {
         if (commandToConsumer.containsKey(command))
         {
-            commandToConsumer.get(command).accept(event);
+            commandToConsumer.get(command).accept(event, event.getMessage().getChannel().block());
         }
     }
 

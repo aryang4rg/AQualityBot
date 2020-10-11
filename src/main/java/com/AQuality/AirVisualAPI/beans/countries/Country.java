@@ -1,10 +1,8 @@
 package com.AQuality.AirVisualAPI.beans.countries;
 
-import com.AQuality.AirVisualAPI.beans.Bean;
-
 import java.io.Serializable;
 
-public class Country implements Serializable, Bean {
+public class Country implements Serializable {
 
     private String country;
 

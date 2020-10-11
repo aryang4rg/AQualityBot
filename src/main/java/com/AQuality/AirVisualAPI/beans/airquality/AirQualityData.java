@@ -1,9 +1,7 @@
 package com.AQuality.AirVisualAPI.beans.airquality;
 
-import com.AQuality.AirVisualAPI.beans.Bean;
-
 import java.io.Serializable;
-public class AirQualityData implements Bean, Serializable {
+public class AirQualityData implements Serializable {
 
     private String city;
     private String state;

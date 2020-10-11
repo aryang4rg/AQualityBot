@@ -1,10 +1,8 @@
 package com.AQuality.AirVisualAPI.beans.airquality;
 
-import com.AQuality.AirVisualAPI.beans.Bean;
-
 import java.io.Serializable;
 
-public class CurrWeatherPollution implements Bean, Serializable {
+public class CurrWeatherPollution implements Serializable {
 
     private Weather weather;
     private Pollution pollution;

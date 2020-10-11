@@ -1,7 +1,10 @@
 package com.AQuality.AirVisualAPI.beans;
 
 
-public interface MainBean
+public abstract class MainBean<T>
 {
-    String getStatus();
+    public abstract String getStatus();
+    public abstract T getData();
+
+
 }

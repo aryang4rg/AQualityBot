@@ -1,13 +1,13 @@
 package com.AQuality.AirVisualAPI.beans.airquality;
 
-import com.AQuality.AirVisualAPI.beans.Bean;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-public class Pollution implements Bean, Serializable {
+public class Pollution implements Serializable {
 
     /**
      * timestamp
@@ -56,10 +56,12 @@ public class Pollution implements Bean, Serializable {
         return mainus;
     }
 
-    public String getMainPollutant()
+    public Pollutants getMainPollutant()
     {
-        return getMainus();
+        return Enum.valueOf(Pollutants.class, getMainus());
     }
+
+
     public void setMainus(String mainus) {
         this.mainus = mainus;
     }

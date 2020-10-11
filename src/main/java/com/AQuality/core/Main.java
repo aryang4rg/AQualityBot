@@ -36,7 +36,7 @@ public class Main {
                     if (Util.isValidString(strMessage))
                     {
                         String command = Util.getCommand(strMessage);
-                        Util.commandRunner(command, event);
+                        Util.runCommand(command, event);
                     }
                 }
         );

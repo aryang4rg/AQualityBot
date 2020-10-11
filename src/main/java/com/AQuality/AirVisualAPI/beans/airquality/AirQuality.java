@@ -1,12 +1,11 @@
 package com.AQuality.AirVisualAPI.beans.airquality;
 
 
-import com.AQuality.AirVisualAPI.beans.Bean;
 import com.AQuality.AirVisualAPI.beans.MainBean;
 
 import java.io.Serializable;
 
-public class AirQuality implements MainBean, Bean, Serializable {
+public class AirQuality extends MainBean<AirQualityData> implements Serializable {
 
     private String status;
     private AirQualityData data;
@@ -24,8 +23,6 @@ public class AirQuality implements MainBean, Bean, Serializable {
     {
         return data.getCurrWeatherPollution().getPollution();
     }
-
-
 
     public void setStatus(String status) {
         this.status = status;

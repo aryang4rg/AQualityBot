@@ -1,13 +1,11 @@
 package com.AQuality.AirVisualAPI.beans.airquality;
 
-import com.AQuality.AirVisualAPI.beans.Bean;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-public class Weather implements Bean, Serializable {
+public class Weather implements Serializable {
 
     /**
      * Timestamp
