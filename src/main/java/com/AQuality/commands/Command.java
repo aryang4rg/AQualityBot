@@ -39,6 +39,10 @@ public abstract class Command<T>
                 }
             }
         }
+        catch (UserException e)
+        {
+            channel.createMessage(e.getMessage());
+        }
         catch (Exception e)
         {
             channel.createMessage("There seems to be an internal error! Sorry about that.").block();

@@ -16,11 +16,15 @@ public class Util
     public static final String PREFIX = "aq!";
     public static final String AIRVISUALAPIKEY;
     public static final String DISCORDBOTTOKEN;
+    public static final String LEFTARROW = "⬅";
+    public static final String RIGHTARROW = "➡";
 
     public static Map<String, String> countryCodes = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public static HashMap<String, Command<MessageCreateEvent>> commandToConsumer= new HashMap<>();
 
     private static TreeMap<Snowflake, ReactableCommand<ReactionAddEvent>> reactToConsumer = new TreeMap<>();
+
+
 
     public static void onReact(Snowflake messagesReactedTo, ReactionAddEvent event)
     {

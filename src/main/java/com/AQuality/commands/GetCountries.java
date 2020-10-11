@@ -1,84 +1,172 @@
 package com.AQuality.commands;
 
-import com.AQuality.AirVisualAPI.beans.countries.Countries;
 import com.AQuality.AirVisualAPI.beans.countries.Country;
 import com.AQuality.AirVisualAPI.beans.countries.CountriesCaller;
 import com.AQuality.core.Util;
-import discord4j.common.util.Snowflake;
 import discord4j.core.event.domain.message.MessageCreateEvent;
+import discord4j.core.event.domain.message.ReactionAddEvent;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.channel.MessageChannel;
+import discord4j.core.object.reaction.ReactionEmoji;
 import discord4j.rest.util.Color;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class GetCountries extends Command<MessageCreateEvent> {
+public class GetCountries extends Command<MessageCreateEvent> implements ReactableCommand<ReactionAddEvent> {
 
-    CountriesCaller list;
+    private CountriesCaller list;
+    private int pageNumber = 1;
+    private final int numberOfElementsPerPage = 20;
+    private String regexParameter = "";
+    private Message message;
 
     @Override
-    public void acceptImpl(MessageCreateEvent messageCreateEvent, MessageChannel channel) throws Exception
-    {
+    public void acceptImpl(MessageCreateEvent messageCreateEvent, MessageChannel channel) throws Exception {
         list = new CountriesCaller();
         List<String> tokensOfMessage = Util.getInputParams(messageCreateEvent.getMessage().getContent());
-
-        if (tokensOfMessage.size() == 0) {
-            channel.createEmbed(
-                    (spec) ->
-                    {
-                        spec.setColor(Color.RED);
-                        String desc = "";
-                        List<Country> countryList = list.getObject().getData();
-                        for (int i = 0; i < countryList.size() - 1; i++) {
-                            String country = countryList.get(i).getCountry();
-                            desc += country + " ";
-                            desc += Util.countryNameToEmoji(country);
-
-                            desc += ",\n";
-                        }
-                        String country = countryList.get(countryList.size() - 1).getCountry();
-                        desc += country + " ";
-                        desc += Util.countryNameToEmoji(country);
-                        spec.setDescription(desc);
-
-                    }).block();
+        if (tokensOfMessage.size() == 1)
+        {
+            try
+            {
+                pageNumber = Integer.parseInt(tokensOfMessage.get(0));
+                if (pageNumber <= 0)
+                {
+                    throw new UserException("Can not choose a page number under 1");
+                }
+            }
+            catch (NumberFormatException e)
+            {
+                regexParameter = tokensOfMessage.get(0);
+            }
+        }
+        else if (tokensOfMessage.size() == 2)
+        {
+            regexParameter = tokensOfMessage.get(0);
+            try
+            {
+                pageNumber = Integer.parseInt(tokensOfMessage.get(1) );
+            }
+            catch (NumberFormatException e)
+            {
+                throw new UserException("unable to parse page number: " + pageNumber + "into a number");
+            }
+        }
+        if (regexParameter.length() == 0)
+        {
+            message = createNormalEmbed(channel);
+        }
+        else if(regexParameter.equalsIgnoreCase("all"))
+        {
+            message = createEmbedWithAll(channel);
         }
         else
         {
-            String totalRegex = "";
-            for (int i = 0; i < tokensOfMessage.size(); i++)
-            {
-                totalRegex += tokensOfMessage.get(i);
-            }
-            final String TOTALREGEX = totalRegex;
-            Pattern pattern = Pattern.compile(totalRegex);
-            Message m = channel.createEmbed(
-                    (spec) ->
+            message = createEmbedWithRegex(regexParameter, channel);
+        }
+        message.addReaction(ReactionEmoji.unicode(Util.LEFTARROW)).block();
+        message.addReaction(ReactionEmoji.unicode(Util.RIGHTARROW)).block();
+        Util.addToReactToConsumer(message.getId(), this);
+
+    }
+
+    @Override
+    public void onReact(ReactionAddEvent obj) {
+
+    }
+
+    private Message createNormalEmbed(MessageChannel channel)
+    {
+        return channel.createEmbed(
+                (spec) ->
+                {
+                    spec.setColor(Color.RED);
+                    String desc = "";
+                    List<Country> countryList = list.getObject().getData();
+                    for (int i = numberOfElementsPerPage*(pageNumber -1); i < countryList.size() && i < pageNumber * numberOfElementsPerPage; i++) {
+                        String country = countryList.get(i).getCountry();
+                        desc += country + " ";
+                        desc += Util.countryNameToEmoji(country);
+
+                        desc += ",\n";
+                    }
+
+                    if (desc.length() == 0)
                     {
-                        spec.setColor(Color.RED);
-                        String desc = "";
-                        List<Country> countryList = list.getObject().getData();
-                        for (int i = 0; i < countryList.size(); i++) {
-                            String country = countryList.get(i).getCountry();
-                            if (pattern.matcher(country).matches())
-                            {
-                                desc += country + " ";
-                                desc += Util.countryNameToEmoji(country);
-                                desc += ",\n";
-                            }
+                        spec.setDescription("Page number " + pageNumber + " too high!");
+                    }
+                    else {
+                        spec.setDescription(desc.substring(0, desc.length() - 2));
+                    }
+                    spec.setFooter("Page " + pageNumber, null);
+
+                }).block();
+    }
+
+    private Message createEmbedWithRegex(String regex, MessageChannel channel)
+    {
+        Pattern pattern = Pattern.compile(regex);
+       return channel.createEmbed(
+                (spec) ->
+                {
+                    spec.setColor(Color.RED);
+                    String desc = "";
+                    List<Country> countryList = list.getObject().getData();
+                    ArrayList<String> countriesThatMatchRegex = new ArrayList<>();
+                    for (int i = 0; i < countryList.size(); i++)
+                    {
+                        String country = countryList.get(i).getCountry();
+                        if (pattern.matcher(country).matches())
+                        {
+                            countriesThatMatchRegex.add(country);
+                        }
+                    }
+                    if (countriesThatMatchRegex.size() == 0)
+                    {
+                        spec.setDescription("No countries which matches REGEX pattern: " + regex);
+                    }
+                    else
+                    {
+                        for (int i = numberOfElementsPerPage*(pageNumber -1); i < countriesThatMatchRegex.size() && i < pageNumber * numberOfElementsPerPage; i++)
+                        {
+                            desc += countriesThatMatchRegex.get(i) + ",\n";
                         }
                         if (desc.length() == 0)
                         {
-                            spec.setDescription("No countries which matches REGEX pattern: " + TOTALREGEX);
+                            spec.setDescription("Page number " + pageNumber + " too high!");
                         }
                         else
                         {
                             spec.setDescription(desc.substring(0, desc.length()-2));
                         }
+                    }
+                    spec.setFooter("Page " + pageNumber, null);
 
-                    }).block();
-
-        }
+                }).block();
     }
+
+    private Message createEmbedWithAll(MessageChannel channel)
+    {
+        return channel.createEmbed(
+                (spec) ->
+                {
+                    spec.setColor(Color.RED);
+                    String desc = "";
+                    List<Country> countryList = list.getObject().getData();
+                    for (int i = 0; i < countryList.size() - 1; i++) {
+                        String country = countryList.get(i).getCountry();
+                        desc += country + " ";
+                        desc += Util.countryNameToEmoji(country);
+
+                        desc += ",\n";
+                    }
+                    String country = countryList.get(countryList.size() - 1).getCountry();
+                    desc += country + " ";
+                    desc += Util.countryNameToEmoji(country);
+                    spec.setDescription(desc);
+
+                }).block();
+    }
+
 }
