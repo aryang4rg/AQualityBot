@@ -20,28 +20,28 @@ public abstract class Command<T>
                 case("call_limit_reached"):
                 case ("too_many_requests"):
                 {
-                    channel.createMessage("Too many people have been making calls. Please try again in a couple of minutes!");
+                    channel.createMessage("Too many people have been making calls. Please try again in a couple of minutes!").block();
                     break;
                 }
                 case("api_key_expired"):
                 case("incorrect_api_key"): {
-                    channel.createMessage("Uh oh, the bot seems to be having the wrong api key");
+                    channel.createMessage("Uh oh, the bot seems to be having the wrong api key").block();
                     break;
                 }
                 case("no_nearest_station"):
                 {
-                    channel.createMessage("There seems to not be a station near the location you chose");
+                    channel.createMessage("There seems to not be a station near the location you chose").block();
                     break;
                 }
                 default:
                 {
-                    channel.createMessage("API ERROR: " + error);
+                    channel.createMessage("API ERROR: " + error).block();
                 }
             }
         }
         catch (Exception e)
         {
-            channel.createMessage("There seems to be an internal error! Sorry about that.");
+            channel.createMessage("There seems to be an internal error! Sorry about that.").block();
             e.printStackTrace();
             //TODO add a logging function here
         }
