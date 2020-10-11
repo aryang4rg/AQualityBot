@@ -3,7 +3,9 @@ package com.AQuality.core;
 import discord4j.core.DiscordClient;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.message.MessageCreateEvent;
+import discord4j.core.event.domain.message.ReactionAddEvent;
 import discord4j.core.object.entity.Message;
+import discord4j.core.object.entity.User;
 
 
 public class Main {
@@ -41,6 +43,14 @@ public class Main {
                     }
                 }
         );
+
+        gateway.on(ReactionAddEvent.class).subscribe
+                (
+                        (event) ->
+                        {
+                            Util.onReact(event.getMessage().block().getId(), event);
+                        }
+                );
 
 
         gateway.onDisconnect().block();

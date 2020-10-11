@@ -1,5 +1,6 @@
 package com.AQuality.commands;
 
+import com.AQuality.AirVisualAPI.beans.countries.Countries;
 import com.AQuality.AirVisualAPI.beans.countries.Country;
 import com.AQuality.AirVisualAPI.beans.countries.CountriesCaller;
 import com.AQuality.core.Util;
@@ -14,10 +15,12 @@ import java.util.regex.Pattern;
 
 public class GetCountries extends Command<MessageCreateEvent> {
 
+    CountriesCaller list;
+
     @Override
     public void acceptImpl(MessageCreateEvent messageCreateEvent, MessageChannel channel) throws Exception
     {
-        CountriesCaller list = new CountriesCaller();
+        list = new CountriesCaller();
         List<String> tokensOfMessage = Util.getInputParams(messageCreateEvent.getMessage().getContent());
 
         if (tokensOfMessage.size() == 0) {

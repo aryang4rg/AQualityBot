@@ -2,8 +2,11 @@ package com.AQuality.core;
 
 import com.AQuality.commands.Command;
 import com.AQuality.commands.GetCountries;
+import com.AQuality.commands.ReactableCommand;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import discord4j.common.util.Snowflake;
 import discord4j.core.event.domain.message.MessageCreateEvent;
+import discord4j.core.event.domain.message.ReactionAddEvent;
 
 import java.io.File;
 import java.util.*;
@@ -16,6 +19,26 @@ public class Util
 
     public static Map<String, String> countryCodes = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public static HashMap<String, Command<MessageCreateEvent>> commandToConsumer= new HashMap<>();
+
+    private static TreeMap<Snowflake, ReactableCommand<ReactionAddEvent>> reactToConsumer = new TreeMap<>();
+
+    public static void onReact(Snowflake messagesReactedTo, ReactionAddEvent event)
+    {
+        if (!reactToConsumer.containsKey(messagesReactedTo))
+        {
+            return;
+        }
+        reactToConsumer.get(messagesReactedTo).onReact(event);
+    }
+
+    public static void addToReactToConsumer(Snowflake snowflake, ReactableCommand<ReactionAddEvent> obj)
+    {
+        reactToConsumer.put(snowflake, obj);
+        if (reactToConsumer.size() > 1000) //help prevent a "memory leak" type issue with continually storing messages sent
+        {
+            reactToConsumer.remove(reactToConsumer.firstKey());
+        }
+    }
 
     static
     {
