@@ -8,19 +8,25 @@ import discord4j.core.event.domain.message.ReactionAddEvent;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.channel.MessageChannel;
 import discord4j.core.object.reaction.ReactionEmoji;
+import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.rest.util.Color;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class GetCountries extends Command<MessageCreateEvent> implements ReactableCommand<ReactionAddEvent> {
+public class GetCountries extends Command implements ReactableCommand {
 
     private CountriesCaller list;
     private int pageNumber = 1;
     private final int numberOfElementsPerPage = 20;
     private String regexParameter = "";
     private Message message;
+
+    @Override
+    public Command createNew() {
+        return new GetCountries();
+    }
 
     @Override
     public void acceptImpl(MessageCreateEvent messageCreateEvent, MessageChannel channel) throws Exception {
@@ -55,118 +61,146 @@ public class GetCountries extends Command<MessageCreateEvent> implements Reactab
         }
         if (regexParameter.length() == 0)
         {
-            message = createNormalEmbed(channel);
+            message = channel.createEmbed(this::createNormalEmbed).block();
+            makePageMessage();
         }
         else if(regexParameter.equalsIgnoreCase("all"))
         {
-            message = createEmbedWithAll(channel);
+            message = channel.createEmbed(this::createEmbedWithAll).block();
         }
         else
         {
-            message = createEmbedWithRegex(regexParameter, channel);
+            message = channel.createEmbed(
+                    spec -> {createEmbedWithRegex(spec);}
+            ).block();
+            makePageMessage();
         }
-        message.addReaction(ReactionEmoji.unicode(Util.LEFTARROW)).block();
-        message.addReaction(ReactionEmoji.unicode(Util.RIGHTARROW)).block();
-        Util.addToReactToConsumer(message.getId(), this);
-
     }
 
     @Override
-    public void onReact(ReactionAddEvent obj) {
+    public void onReact(ReactionAddEvent event) {
+        if (regexParameter.equalsIgnoreCase("all"))
+        {
+            return;
+        }
+        if (event.getEmoji().equals(ReactionEmoji.unicode(Util.LEFTARROW)))
+        {
+            if (pageNumber <= 1)
+            {
+                return;
+            }
+            pageNumber -= 1;
+
+        }
+        else if (event.getEmoji().equals(ReactionEmoji.unicode(Util.RIGHTARROW)))
+        {
+            pageNumber += 1;
+        }
+
+        if (regexParameter.length() == 0)
+        {
+            message = message.edit(messageEditSpec -> {messageEditSpec.setEmbed(this::createNormalEmbed);}).block();
+        }
+        else
+        {
+            message = message.edit(messageEditSpec -> {messageEditSpec.setEmbed(this::createEmbedWithRegex);}).block();
+        }
 
     }
 
-    private Message createNormalEmbed(MessageChannel channel)
+    private void makePageMessage()
     {
-        return channel.createEmbed(
-                (spec) ->
-                {
-                    spec.setColor(Color.RED);
-                    String desc = "";
-                    List<Country> countryList = list.getObject().getData();
-                    for (int i = numberOfElementsPerPage*(pageNumber -1); i < countryList.size() && i < pageNumber * numberOfElementsPerPage; i++) {
-                        String country = countryList.get(i).getCountry();
-                        desc += country + " ";
-                        desc += Util.countryNameToEmoji(country);
-
-                        desc += ",\n";
-                    }
-
-                    if (desc.length() == 0)
-                    {
-                        spec.setDescription("Page number " + pageNumber + " too high!");
-                    }
-                    else {
-                        spec.setDescription(desc.substring(0, desc.length() - 2));
-                    }
-                    spec.setFooter("Page " + pageNumber, null);
-
-                }).block();
+        message.addReaction(ReactionEmoji.unicode(Util.LEFTARROW)).block();
+        message.addReaction(ReactionEmoji.unicode(Util.RIGHTARROW)).block();
+        Util.addToReactToConsumer(message.getId(), this);
     }
 
-    private Message createEmbedWithRegex(String regex, MessageChannel channel)
+    private void createNormalEmbed(EmbedCreateSpec spec)
     {
-        Pattern pattern = Pattern.compile(regex);
-       return channel.createEmbed(
-                (spec) ->
-                {
-                    spec.setColor(Color.RED);
-                    String desc = "";
-                    List<Country> countryList = list.getObject().getData();
-                    ArrayList<String> countriesThatMatchRegex = new ArrayList<>();
-                    for (int i = 0; i < countryList.size(); i++)
-                    {
-                        String country = countryList.get(i).getCountry();
-                        if (pattern.matcher(country).matches())
-                        {
-                            countriesThatMatchRegex.add(country);
-                        }
-                    }
-                    if (countriesThatMatchRegex.size() == 0)
-                    {
-                        spec.setDescription("No countries which matches REGEX pattern: " + regex);
-                    }
-                    else
-                    {
-                        for (int i = numberOfElementsPerPage*(pageNumber -1); i < countriesThatMatchRegex.size() && i < pageNumber * numberOfElementsPerPage; i++)
-                        {
-                            desc += countriesThatMatchRegex.get(i) + ",\n";
-                        }
-                        if (desc.length() == 0)
-                        {
-                            spec.setDescription("Page number " + pageNumber + " too high!");
-                        }
-                        else
-                        {
-                            spec.setDescription(desc.substring(0, desc.length()-2));
-                        }
-                    }
-                    spec.setFooter("Page " + pageNumber, null);
+        initializeSpec(spec);
+        String desc = "";
+        List<Country> countryList = list.getObject().getData();
+        for (int i = numberOfElementsPerPage*(pageNumber -1); i < countryList.size() && i < pageNumber * numberOfElementsPerPage; i++) {
+            String country = countryList.get(i).getCountry();
+            desc += country + " ";
+            desc += Util.countryNameToEmoji(country);
 
-                }).block();
+            desc += ",\n";
+        }
+
+        if (desc.length() == 0)
+        {
+            spec.setDescription("No Results Found!");
+        }
+        else {
+            spec.setDescription(desc.substring(0, desc.length() - 2));
+        }
+        spec.setFooter("Page " + pageNumber, null);
     }
 
-    private Message createEmbedWithAll(MessageChannel channel)
+    private void createEmbedWithRegex(EmbedCreateSpec spec)
     {
-        return channel.createEmbed(
-                (spec) ->
-                {
-                    spec.setColor(Color.RED);
-                    String desc = "";
-                    List<Country> countryList = list.getObject().getData();
-                    for (int i = 0; i < countryList.size() - 1; i++) {
-                        String country = countryList.get(i).getCountry();
-                        desc += country + " ";
-                        desc += Util.countryNameToEmoji(country);
+        Pattern pattern = Pattern.compile(regexParameter);
+        initializeSpec(spec);
+        spec.setColor(Color.RED);
+        String desc = "";
+        List<Country> countryList = list.getObject().getData();
+        ArrayList<String> countriesThatMatchRegex = new ArrayList<>();
+        for (int i = 0; i < countryList.size(); i++)
+        {
+            String country = countryList.get(i).getCountry();
+            if (pattern.matcher(country).matches())
+            {
+                countriesThatMatchRegex.add(country);
+            }
+        }
+        if (countriesThatMatchRegex.size() == 0)
+        {
+            spec.setDescription("No countries which matches REGEX pattern: " + regexParameter);
+        }
+        else
+        {
+            for (int i = numberOfElementsPerPage*(pageNumber -1); i < countriesThatMatchRegex.size() && i < pageNumber * numberOfElementsPerPage; i++)
+            {
+                desc += countriesThatMatchRegex.get(i) + Util.countryNameToEmoji( countriesThatMatchRegex.get(i) ) + ",\n";
+            }
+            if (desc.length() == 0)
+            {
+                spec.setDescription("No Results Found!");
+            }
+            else
+            {
+                spec.setDescription(desc.substring(0, desc.length()-2));
+            }
+        }
+        spec.setFooter("Page " + pageNumber, null);
 
-                        desc += ",\n";
-                    }
-                    String country = countryList.get(countryList.size() - 1).getCountry();
-                    desc += country + " ";
-                    desc += Util.countryNameToEmoji(country);
-                    spec.setDescription(desc);
 
-                }).block();
     }
+
+    private void createEmbedWithAll(EmbedCreateSpec spec)
+    {
+        initializeSpec(spec);
+        String desc = "";
+        List<Country> countryList = list.getObject().getData();
+        for (int i = 0; i < countryList.size() - 1; i++) {
+            String country = countryList.get(i).getCountry();
+            desc += country + " ";
+            desc += Util.countryNameToEmoji(country);
+            desc += ",\n";
+        }
+        String country = countryList.get(countryList.size() - 1).getCountry();
+        desc += country + " ";
+        desc += Util.countryNameToEmoji(country);
+        spec.setDescription(desc);
+    }
+
+    private void initializeSpec(EmbedCreateSpec spec)
+    {
+        spec.setColor(Color.RED);
+        spec.setThumbnail("https://images-na.ssl-images-amazon.com/images/I/61GaHo-zgQL._AC_SL1000_.jpg"); //picture of world map
+        spec.setTitle("Available  Countries");
+    }
+
 
 }

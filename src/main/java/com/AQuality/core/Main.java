@@ -13,6 +13,7 @@ public class Main {
     public static void main(String[] args) {
         DiscordClient client = DiscordClient.create(Util.DISCORDBOTTOKEN);
         GatewayDiscordClient gateway = client.login().block();
+        Util.setGatewayDiscordClient(gateway);
         /*
         gateway.on(MessageCreateEvent.class).subscribe((
                 event ->

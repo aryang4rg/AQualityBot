@@ -5,6 +5,7 @@ import com.AQuality.commands.GetCountries;
 import com.AQuality.commands.ReactableCommand;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import discord4j.common.util.Snowflake;
+import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.event.domain.message.ReactionAddEvent;
 
@@ -19,23 +20,31 @@ public class Util
     public static final String LEFTARROW = "⬅";
     public static final String RIGHTARROW = "➡";
 
+    public static GatewayDiscordClient gatewayDiscordClient;
+
     public static Map<String, String> countryCodes = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    public static HashMap<String, Command<MessageCreateEvent>> commandToConsumer= new HashMap<>();
+    public static Map<String, Command> commandToConsumer= new TreeMap<>();
 
-    private static TreeMap<Snowflake, ReactableCommand<ReactionAddEvent>> reactToConsumer = new TreeMap<>();
+    private static TreeMap<Snowflake, ReactableCommand> reactToConsumer = new TreeMap<>();
 
-
+    public static void setGatewayDiscordClient(GatewayDiscordClient gatewayDiscordClient) {
+        Util.gatewayDiscordClient = gatewayDiscordClient;
+    }
 
     public static void onReact(Snowflake messagesReactedTo, ReactionAddEvent event)
     {
-        if (!reactToConsumer.containsKey(messagesReactedTo))
+        if (event.getUserId().equals(gatewayDiscordClient.getSelfId()))
+        {
+            return;
+        }
+        else if (!reactToConsumer.containsKey(messagesReactedTo))
         {
             return;
         }
         reactToConsumer.get(messagesReactedTo).onReact(event);
     }
 
-    public static void addToReactToConsumer(Snowflake snowflake, ReactableCommand<ReactionAddEvent> obj)
+    public static void addToReactToConsumer(Snowflake snowflake, ReactableCommand obj)
     {
         reactToConsumer.put(snowflake, obj);
         if (reactToConsumer.size() > 1000) //help prevent a "memory leak" type issue with continually storing messages sent
@@ -446,7 +455,7 @@ public class Util
     {
         if (commandToConsumer.containsKey(command))
         {
-            commandToConsumer.get(command).accept(event, event.getMessage().getChannel().block());
+            commandToConsumer.get(command).createNew().accept(event, event.getMessage().getChannel().block());
         }
     }
 

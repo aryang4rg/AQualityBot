@@ -1,11 +1,12 @@
 package com.AQuality.commands;
 
 import com.AQuality.AirVisualAPI.APIException;
+import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.entity.channel.MessageChannel;
 
-public abstract class Command<T>
+public abstract class Command
 {
-    public void accept(T obj, MessageChannel channel)
+    public void accept(MessageCreateEvent obj, MessageChannel channel)
     {
         try
         {
@@ -51,6 +52,7 @@ public abstract class Command<T>
         }
 
     }
-    public abstract void acceptImpl(T obj, MessageChannel channel) throws Exception;
+    public abstract void acceptImpl(MessageCreateEvent obj, MessageChannel channel) throws Exception;
+    public abstract Command createNew();
 
 }
