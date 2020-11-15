@@ -6,8 +6,9 @@ import discord4j.core.object.entity.channel.MessageChannel;
 
 public abstract class Command
 {
-    public void accept(MessageCreateEvent obj, MessageChannel channel)
+    public void accept(MessageCreateEvent obj)
     {
+        MessageChannel channel = obj.getMessage().getChannel().block();
         try
         {
             acceptImpl(obj, channel);

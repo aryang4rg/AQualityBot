@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class GetCountries extends Command implements ReactableCommand {
+public class CountriesCommand extends Command implements ReactableCommand {
 
     private CountriesCaller list;
     private int pageNumber = 1;
@@ -25,40 +25,30 @@ public class GetCountries extends Command implements ReactableCommand {
 
     @Override
     public Command createNew() {
-        return new GetCountries();
+        return new CountriesCommand();
     }
 
     @Override
     public void acceptImpl(MessageCreateEvent messageCreateEvent, MessageChannel channel) throws Exception {
         list = new CountriesCaller();
         List<String> tokensOfMessage = Util.getInputParams(messageCreateEvent.getMessage().getContent());
-        if (tokensOfMessage.size() == 1)
+        if (Util.isInputType(tokensOfMessage, Integer.class))
         {
-            try
+            pageNumber = Integer.parseInt(tokensOfMessage.get(0));
+            if (pageNumber <= 0)
             {
-                pageNumber = Integer.parseInt(tokensOfMessage.get(0));
-                if (pageNumber <= 0)
-                {
-                    throw new UserException("Can not choose a page number under 1");
-                }
+                throw new UserException("Can not choose a page number under 1");
             }
-            catch (NumberFormatException e)
-            {
-                regexParameter = tokensOfMessage.get(0);
-            }
+            regexParameter = tokensOfMessage.get(0);
         }
-        else if (tokensOfMessage.size() == 2)
+        else if (Util.isInputType(tokensOfMessage, String.class, Integer.class))
         {
             regexParameter = tokensOfMessage.get(0);
-            try
-            {
-                pageNumber = Integer.parseInt(tokensOfMessage.get(1) );
-            }
-            catch (NumberFormatException e)
-            {
-                throw new UserException("unable to parse page number: " + pageNumber + "into a number");
-            }
+            pageNumber = Integer.parseInt(tokensOfMessage.get(1) );
+            throw new UserException("unable to parse page number: " + pageNumber + "into a number");
         }
+
+
         if (regexParameter.length() == 0)
         {
             message = channel.createEmbed(this::createNormalEmbed).block();
@@ -71,7 +61,7 @@ public class GetCountries extends Command implements ReactableCommand {
         else
         {
             message = channel.createEmbed(
-                    spec -> {createEmbedWithRegex(spec);}
+                    this::createEmbedWithRegex
             ).block();
             makePageMessage();
         }

@@ -49,12 +49,15 @@ public class AirQualityData implements Serializable {
         this.location = location;
     }
 
-    public CurrWeatherPollution getCurrWeatherPollution() {
-        return current;
+    public Pollution getPollution() {
+        return current.getPollution();
     }
 
-    public void setCurrWeatherPollution(CurrWeatherPollution currWeatherPollution) {
-        this.current = currWeatherPollution;
+    public Weather getWeather()
+    {
+        return current.getWeather();
     }
+
+
 
 }

@@ -5,6 +5,4 @@ public abstract class MainBean<T>
 {
     public abstract String getStatus();
     public abstract T getData();
-
-
 }

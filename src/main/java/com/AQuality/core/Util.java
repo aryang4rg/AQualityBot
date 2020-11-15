@@ -1,7 +1,8 @@
 package com.AQuality.core;
 
 import com.AQuality.commands.Command;
-import com.AQuality.commands.GetCountries;
+import com.AQuality.commands.CountriesCommand;
+import com.AQuality.commands.PollutionWeatherCommand;
 import com.AQuality.commands.ReactableCommand;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import discord4j.common.util.Snowflake;
@@ -75,7 +76,9 @@ public class Util
 
     public static void commandToConsumerFactory()
     {
-        commandToConsumer.put("countries", new GetCountries());
+        commandToConsumer.put("countries", new CountriesCommand());
+        commandToConsumer.put("pollution", new PollutionWeatherCommand());
+        commandToConsumer.put("weather", new PollutionWeatherCommand());
     }
 
     /**
@@ -381,6 +384,7 @@ public class Util
     public static String getCommand(String str)
     {
         String ans = "";
+        str = str.toLowerCase();
 
         if (!isValidString(str))
         {
@@ -455,8 +459,40 @@ public class Util
     {
         if (commandToConsumer.containsKey(command))
         {
-            commandToConsumer.get(command).createNew().accept(event, event.getMessage().getChannel().block());
+            commandToConsumer.get(command).createNew().accept(event);
         }
+    }
+
+    public static boolean isInputType(List<String> inputs, Class... clazz)
+    {
+        if (inputs.size() != clazz.length)
+        {
+            return false;
+        }
+        for (int i = 0; i < inputs.size(); i++)
+        {
+            if (clazz[i] == Integer.class)
+            {
+                try {
+                    Integer.parseInt(inputs.get(i));
+                }
+                catch (NumberFormatException e)
+                {
+                    return false;
+                }
+            }
+            else if (clazz[i] == Double.class)
+            {
+                try {
+                    Double.parseDouble(inputs.get(i));
+                }
+                catch (NumberFormatException e)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
 

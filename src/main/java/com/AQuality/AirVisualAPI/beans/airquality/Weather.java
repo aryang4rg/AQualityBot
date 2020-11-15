@@ -54,9 +54,14 @@ public class Weather implements Serializable {
         return tp;
     }
 
-    public Integer getTemperature()
+    public Integer getTemperatureC()
     {
         return getTp();
+    }
+
+    public Integer getTemperatureF()
+    {
+        return (int)(getTp()*1.8) + 32;
     }
 
     public void setTp(Integer tp) {
@@ -120,6 +125,111 @@ public class Weather implements Serializable {
 
     public void setIc(String ic) {
         this.ic = ic;
+    }
+
+    public String getWeatherInDescriptionForm()
+    {
+        switch (getIc())
+        {
+            case ("01d"):
+            {
+                return "clear sky (day)";
+            }
+            case ("01n"):
+            {
+                return "clear sky (night)";
+            }
+            case ("02d"):
+            {
+                return "few clouds (day)";
+            }
+            case ("02n"):
+            {
+                return "few clouds (night)";
+            }
+            case ("03d"):
+            {
+                return "scattered clouds";
+            }
+            case ("04d"):
+            {
+                return "broken clouds";
+            }
+            case ("09d"):
+            {
+                return "shower rain";
+            }
+            case ("10d"):
+            {
+                return "rain (day)";
+            }
+            case ("10n"):
+            {
+                return "rain (night)";
+            }
+            case ("11d"):
+            {
+                return "thunderstorm";
+            }
+            case ("13d"):
+            {
+                return "snow";
+            }
+            case ("50d"):
+            {
+                return "mist";
+            }
+        }
+        return null;
+    }
+
+    public String getWeatherInEmojiForm()
+    {
+        switch (getIc())
+        {
+            case ("01d"):
+            {
+                return "☀";
+            }
+            case ("01n"):
+            {
+                return "\uD83C\uDF19";
+            }
+            case ("02d"):
+            {
+                return "few clouds (day)";
+            }
+            case ("02n"):
+            {
+                return "few clouds (night)";
+            }
+            case ("03d"):
+            {
+                return "scattered clouds";
+            }
+            case ("04d"):
+            {
+                return "broken clouds";
+            }
+            case ("09d"):
+            case ("10d"):
+            case ("10n"): {
+                return "\uD83C\uDF27";
+            }
+            case ("11d"):
+            {
+                return "\uD83C\uDF29";
+            }
+            case ("13d"):
+            {
+                return "\uD83C\uDF28";
+            }
+            case ("50d"):
+            {
+                return "\uD83C\uDF2B";
+            }
+        }
+        return null;
     }
 
 }
