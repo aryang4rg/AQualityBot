@@ -1,6 +1,6 @@
-package com.AQuality.AirVisualAPI.beans.airquality;
+package com.AQuality.api.AirVisualAPI.beans.airquality;
 
-import com.AQuality.AirVisualAPI.APICaller;
+import com.AQuality.api.AirVisualAPI.APICaller;
 
 import java.net.URL;
 

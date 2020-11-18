@@ -1,4 +1,4 @@
-package com.AQuality.AirVisualAPI.beans.airquality;
+package com.AQuality.api.AirVisualAPI.beans.airquality;
 
 import java.io.Serializable;
 public class AirQualityData implements Serializable {
@@ -39,6 +39,10 @@ public class AirQualityData implements Serializable {
 
     public void setCurrent(CurrWeatherPollution current) {
         this.current = current;
+    }
+
+    public CurrWeatherPollution getCurrWeatherPollution() {
+        return current;
     }
 
     public Location getLocation() {

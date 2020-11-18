@@ -1,11 +1,11 @@
-package com.AQuality.AirVisualAPI;
+package com.AQuality.api;
 
 public class APIException extends Exception {
-    APIException()
+    public APIException()
     {
         super();
     }
-    APIException(String message)
+    public APIException(String message)
     {
         super(message);
     }

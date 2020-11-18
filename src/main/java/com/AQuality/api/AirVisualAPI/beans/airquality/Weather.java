@@ -1,7 +1,9 @@
-package com.AQuality.AirVisualAPI.beans.airquality;
+package com.AQuality.api.AirVisualAPI.beans.airquality;
+
+import com.AQuality.api.AirVisualAPI.beans.MainBean;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
@@ -39,11 +41,6 @@ public class Weather implements Serializable {
 
     public String getTs() {
         return ts;
-    }
-
-    public LocalDate getTime()
-    {
-        return LocalDate.parse(ts, formatter);
     }
 
     public void setTs(String ts) {
@@ -127,6 +124,16 @@ public class Weather implements Serializable {
         this.ic = ic;
     }
 
+    public String getWeatherInPhotoForm()
+    {
+        return "https://www.airvisual.com/images/" + getIc() + ".png";
+    }
+
+    public LocalDateTime getTime()
+    {
+        return LocalDateTime.parse(getTs(), MainBean.formatter);
+    }
+
     public String getWeatherInDescriptionForm()
     {
         switch (getIc())
@@ -196,21 +203,13 @@ public class Weather implements Serializable {
                 return "\uD83C\uDF19";
             }
             case ("02d"):
-            {
-                return "few clouds (day)";
-            }
             case ("02n"):
-            {
-                return "few clouds (night)";
-            }
             case ("03d"):
-            {
-                return "scattered clouds";
-            }
             case ("04d"):
             {
-                return "broken clouds";
+                return "☁";
             }
+
             case ("09d"):
             case ("10d"):
             case ("10n"): {

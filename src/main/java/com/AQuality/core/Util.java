@@ -10,7 +10,11 @@ import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.event.domain.message.ReactionAddEvent;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URLConnection;
 import java.util.*;
 
 public class Util
@@ -18,6 +22,7 @@ public class Util
     public static final String PREFIX = "aq!";
     public static final String AIRVISUALAPIKEY;
     public static final String DISCORDBOTTOKEN;
+    public static final String GOOGLEMAPSAPIKEY;
     public static final String LEFTARROW = "⬅";
     public static final String RIGHTARROW = "➡";
 
@@ -54,6 +59,29 @@ public class Util
         }
     }
 
+    public static String urlReader(URLConnection connection) throws Exception {
+        BufferedReader in;
+        if ( ((HttpURLConnection) connection).getResponseCode() >= 400)
+        {
+            in = new BufferedReader(new InputStreamReader(
+                    ((HttpURLConnection) connection).getErrorStream()));
+        }
+        else
+        {
+            in = new BufferedReader(new InputStreamReader(
+                    connection.getInputStream()));
+        }
+
+        String inputLine;
+        StringBuilder allTokens = new StringBuilder();
+        while ((inputLine = in.readLine()) != null)
+        {
+            allTokens.append(inputLine);
+        }
+        in.close();
+        return allTokens.toString();
+    }
+
     static
     {
         commandToConsumerFactory();
@@ -71,7 +99,7 @@ public class Util
         }
         AIRVISUALAPIKEY = creds.getAirVisualApiKey();
         DISCORDBOTTOKEN = creds.getDiscordBotToken();
-
+        GOOGLEMAPSAPIKEY = creds.getGoogleMapsApiKey();
     }
 
     public static void commandToConsumerFactory()

@@ -1,14 +1,12 @@
-package com.AQuality.AirVisualAPI;
+package com.AQuality.api.AirVisualAPI;
 
-import com.AQuality.AirVisualAPI.beans.MainBean;
+import com.AQuality.api.AirVisualAPI.beans.MainBean;
+import com.AQuality.api.APIException;
 import com.AQuality.core.Util;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -34,7 +32,7 @@ public abstract class APICaller<T extends MainBean>
         this.clazz = clazz;
         this.url = url;
         connection = url.openConnection();
-        String jsonString = urlReader();
+        String jsonString = Util.urlReader(connection);
         JsonNode node = objectMapper.readTree(jsonString);
         if (!node.path("status").asText().equalsIgnoreCase("success"))
         {
@@ -59,28 +57,6 @@ public abstract class APICaller<T extends MainBean>
         this.connection = connection;
     }
 
-    public String urlReader() throws Exception {
-        BufferedReader in;
-        if ( ((HttpURLConnection) connection).getResponseCode() >= 400)
-        {
-            in = new BufferedReader(new InputStreamReader(
-                    ((HttpURLConnection) connection).getErrorStream()));
-        }
-        else
-        {
-            in = new BufferedReader(new InputStreamReader(
-                    connection.getInputStream()));
-        }
-
-        String inputLine;
-        StringBuilder allTokens = new StringBuilder();
-        while ((inputLine = in.readLine()) != null)
-        {
-            allTokens.append(inputLine);
-        }
-        in.close();
-        return allTokens.toString();
-    }
 
     @Override
     public String toString() {

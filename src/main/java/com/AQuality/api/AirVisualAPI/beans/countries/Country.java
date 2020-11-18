@@ -1,4 +1,4 @@
-package com.AQuality.AirVisualAPI.beans.countries;
+package com.AQuality.api.AirVisualAPI.beans.countries;
 
 import java.io.Serializable;
 

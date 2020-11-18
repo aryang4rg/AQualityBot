@@ -1,4 +1,6 @@
 {
   "airVisualApiKey" : "yourairvisualapikeyhere",
-  "discordBotToken" : "your discord bot token here"
+  "discordBotToken" : "your discord bot token here",
+  "googleMapsApiKey" : "yourGoogleMapsApiKeyHere"
+
 }

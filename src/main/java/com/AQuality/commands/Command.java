@@ -1,6 +1,6 @@
 package com.AQuality.commands;
 
-import com.AQuality.AirVisualAPI.APIException;
+import com.AQuality.api.APIException;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.entity.channel.MessageChannel;
 

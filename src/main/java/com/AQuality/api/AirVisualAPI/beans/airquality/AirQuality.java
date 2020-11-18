@@ -1,7 +1,7 @@
-package com.AQuality.AirVisualAPI.beans.airquality;
+package com.AQuality.api.AirVisualAPI.beans.airquality;
 
 
-import com.AQuality.AirVisualAPI.beans.MainBean;
+import com.AQuality.api.AirVisualAPI.beans.MainBean;
 
 import java.io.Serializable;
 

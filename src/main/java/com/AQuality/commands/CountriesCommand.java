@@ -1,7 +1,7 @@
 package com.AQuality.commands;
 
-import com.AQuality.AirVisualAPI.beans.countries.Country;
-import com.AQuality.AirVisualAPI.beans.countries.CountriesCaller;
+import com.AQuality.api.AirVisualAPI.beans.countries.Country;
+import com.AQuality.api.AirVisualAPI.beans.countries.CountriesCaller;
 import com.AQuality.core.Util;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.event.domain.message.ReactionAddEvent;

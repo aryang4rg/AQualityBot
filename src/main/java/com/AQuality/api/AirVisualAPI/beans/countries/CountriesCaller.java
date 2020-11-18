@@ -1,8 +1,6 @@
-package com.AQuality.AirVisualAPI.beans.countries;
+package com.AQuality.api.AirVisualAPI.beans.countries;
 
-import com.AQuality.AirVisualAPI.APICaller;
-import com.AQuality.AirVisualAPI.beans.countries.Countries;
-import com.AQuality.core.Util;
+import com.AQuality.api.AirVisualAPI.APICaller;
 
 import java.net.URL;
 

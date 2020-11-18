@@ -6,11 +6,16 @@ import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.event.domain.message.ReactionAddEvent;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.User;
+import org.apache.log4j.BasicConfigurator;
 
 
 public class Main {
 
     public static void main(String[] args) {
+
+        BasicConfigurator.configure(); //idk what this line of code does but it fixed my issue
+
+
         DiscordClient client = DiscordClient.create(Util.DISCORDBOTTOKEN);
         GatewayDiscordClient gateway = client.login().block();
         Util.setGatewayDiscordClient(gateway);
