@@ -1,9 +1,6 @@
 package com.AQuality.core;
 
-import com.AQuality.commands.Command;
-import com.AQuality.commands.CountriesCommand;
-import com.AQuality.commands.PollutionWeatherCommand;
-import com.AQuality.commands.ReactableCommand;
+import com.AQuality.commands.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;
@@ -19,37 +16,76 @@ import java.util.*;
 
 public class Util
 {
+    /**
+     * Prefix used in discord to call bot
+     */
     public static final String PREFIX = "aq!";
+    /**
+     * API key used for air visual API
+     */
     public static final String AIRVISUALAPIKEY;
+    /**
+     * Bot token for discord
+     */
     public static final String DISCORDBOTTOKEN;
+    /**
+     * API Key used for the Google Geocode API
+     */
     public static final String GOOGLEMAPSAPIKEY;
-    public static final String LEFTARROW = "⬅";
-    public static final String RIGHTARROW = "➡";
 
+    public static final Snowflake AuthorId = Snowflake.of(285300064602030080L);
+
+    /**
+     * Discord Gateway Client from Discord4J
+     */
     public static GatewayDiscordClient gatewayDiscordClient;
 
+    /**
+     * used to map Country names to Country Codes (which are then later on used to get the Country Flag Emoji)
+     */
     public static Map<String, String> countryCodes = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    /**
+     * Given a String that only includes the command given by the User, it would return the proper class to deal with the command
+     */
     public static Map<String, Command> commandToConsumer= new TreeMap<>();
 
+    /**
+     * list used for when keeping track of reactable messages, when a message is reacted too it will check if that message is in this TreeMap, and if it is it will call the right method for the ReactableCommand
+     */
     private static TreeMap<Snowflake, ReactableCommand> reactToConsumer = new TreeMap<>();
 
+    /**
+     * Sets discord gateway client
+     * @param gatewayDiscordClient Discord Gateway Client
+     */
     public static void setGatewayDiscordClient(GatewayDiscordClient gatewayDiscordClient) {
         Util.gatewayDiscordClient = gatewayDiscordClient;
     }
 
+    /**
+     * Given a message snowflake that got reacted too, it would check if that message is in the reactToConsumer TreeMap
+     * @param messagesReactedTo snowflake of message that someone reacted to
+     * @param event the react message even from Discord4J api
+     */
     public static void onReact(Snowflake messagesReactedTo, ReactionAddEvent event)
     {
-        if (event.getUserId().equals(gatewayDiscordClient.getSelfId()))
+        if (!reactToConsumer.containsKey(messagesReactedTo))
         {
             return;
         }
-        else if (!reactToConsumer.containsKey(messagesReactedTo))
+        else if (event.getUserId().equals(gatewayDiscordClient.getSelfId()))
         {
             return;
         }
         reactToConsumer.get(messagesReactedTo).onReact(event);
     }
 
+    /**
+     * Used when a reactable command wants to add a message to the list to check if a message ever gets reacted too. The onReact command called by the
+     * discord4J api will call the given ReactableCommand Object when that message is ever reacted to
+     * @param snowflake the message that would be kept track of
+     * @param obj the given ReactableCommand object that would be called whenever that message is reacted to
+     */
     public static void addToReactToConsumer(Snowflake snowflake, ReactableCommand obj)
     {
         reactToConsumer.put(snowflake, obj);
@@ -59,6 +95,12 @@ public class Util
         }
     }
 
+    /**
+     * Given an HttpUrlConnection it will give a string repersentation of all the data from that URL
+     * @param connection Http URL connection
+     * @return String repersentation of data from URL
+     * @throws Exception idk url machine broke
+     */
     public static String urlReader(URLConnection connection) throws Exception {
         BufferedReader in;
         if ( ((HttpURLConnection) connection).getResponseCode() >= 400)
@@ -86,6 +128,7 @@ public class Util
     {
         commandToConsumerFactory();
         countryToCountryCodeFactory();
+        commandNamesForHelpCommandFactory();
 
         ObjectMapper objectMapper = new ObjectMapper();
         Credentials creds = null;
@@ -102,15 +145,37 @@ public class Util
         GOOGLEMAPSAPIKEY = creds.getGoogleMapsApiKey();
     }
 
+    /**
+     * where you would initialize command names to command objects
+     */
     public static void commandToConsumerFactory()
     {
         commandToConsumer.put("countries", new CountriesCommand());
         commandToConsumer.put("pollution", new PollutionWeatherCommand());
         commandToConsumer.put("weather", new PollutionWeatherCommand());
+        commandToConsumer.put("help", new HelpCommand());
+        commandToConsumer.put("donate", new DonateCommand());
+        commandToConsumer.put("ping", new PingCommand());
+        commandToConsumer.put("invite", new InviteCommand());
+    }
+
+    public static Map<String, Command> commandNamesForHelpCommand;
+
+    public static void commandNamesForHelpCommandFactory()
+    {
+        commandNamesForHelpCommand = new TreeMap<>();
+        commandNamesForHelpCommand.put("countries", new CountriesCommand());
+        commandNamesForHelpCommand.put("pollution / weather", new PollutionWeatherCommand());
+        commandNamesForHelpCommand.put("help", new HelpCommand());
+        commandNamesForHelpCommand.put("donate", new DonateCommand());
+        commandNamesForHelpCommand.put("ping", new PingCommand());
+        commandNamesForHelpCommand.put("invite", new InviteCommand());
+
     }
 
     /**
      * code curtsy of https://stackoverflow.com/questions/14155049/iso2-country-code-from-country-name
+     * converts countries to country codes
      */
     public static void countryToCountryCodeFactory()
     {
@@ -366,6 +431,7 @@ public class Util
 
     /**
      * Code curtsy of https://attacomsian.com/blog/how-to-convert-country-code-to-emoji-in-java
+     * converts country names to unicode repersentations of emojis
      */
     public static String countryNameToEmoji(String country)
     {
@@ -445,6 +511,11 @@ public class Util
         return true;
     }
 
+    /**
+     * Given a string message, will get all the parameters the user put after that message (seperated by whitespace )
+     * @param message message user gave in
+     * @return a list of all the strings, each string being a parameter given by the user
+     */
     public static List<String> getInputParams(String message)
     {
         ArrayList<String> str = new ArrayList<>();
@@ -479,7 +550,7 @@ public class Util
     }
 
     /**
-     *
+     * Runs a string command given that command name and the discord4j event of that command happening
      * @param command prerequisite: string has already been passed through the getCommand() method
      * @param event event where the command was ran
      */
@@ -491,6 +562,12 @@ public class Util
         }
     }
 
+    /**
+     * checks if a given list of parameters ( most likely given by getInputParamter(String message) ) fits the data type of the given Class (only works on Strings, Integer, or Double)
+     * @param inputs the list of parameters
+     * @param clazz class repersentations of the classes you want to check (ex. Integer.class)
+     * @return returns true or false if inputs match that class input
+     */
     public static boolean isInputType(List<String> inputs, Class... clazz)
     {
         if (inputs.size() != clazz.length)
@@ -518,6 +595,10 @@ public class Util
                 {
                     return false;
                 }
+            }
+            else if (clazz[i] != String.class)
+            {
+                return false;
             }
         }
         return true;

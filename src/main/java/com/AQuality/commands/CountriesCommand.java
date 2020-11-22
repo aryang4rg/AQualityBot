@@ -2,6 +2,7 @@ package com.AQuality.commands;
 
 import com.AQuality.api.AirVisualAPI.beans.countries.Country;
 import com.AQuality.api.AirVisualAPI.beans.countries.CountriesCaller;
+import com.AQuality.core.Pair;
 import com.AQuality.core.Util;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.event.domain.message.ReactionAddEvent;
@@ -73,7 +74,7 @@ public class CountriesCommand extends Command implements ReactableCommand {
         {
             return;
         }
-        if (event.getEmoji().equals(ReactionEmoji.unicode(Util.LEFTARROW)))
+        if (event.getEmoji().equals(ReactionEmoji.unicode(LEFTARROW)))
         {
             if (pageNumber <= 1)
             {
@@ -82,7 +83,7 @@ public class CountriesCommand extends Command implements ReactableCommand {
             pageNumber -= 1;
 
         }
-        else if (event.getEmoji().equals(ReactionEmoji.unicode(Util.RIGHTARROW)))
+        else if (event.getEmoji().equals(ReactionEmoji.unicode(RIGHTARROW)))
         {
             pageNumber += 1;
         }
@@ -100,8 +101,8 @@ public class CountriesCommand extends Command implements ReactableCommand {
 
     private void makePageMessage()
     {
-        message.addReaction(ReactionEmoji.unicode(Util.LEFTARROW)).block();
-        message.addReaction(ReactionEmoji.unicode(Util.RIGHTARROW)).block();
+        message.addReaction(ReactionEmoji.unicode(LEFTARROW)).block();
+        message.addReaction(ReactionEmoji.unicode(RIGHTARROW)).block();
         Util.addToReactToConsumer(message.getId(), this);
     }
 
@@ -192,5 +193,21 @@ public class CountriesCommand extends Command implements ReactableCommand {
         spec.setTitle("Available  Countries");
     }
 
+    @Override
+    public String getHelpDesc() {
+        return "Gets List of Supported Countries.";
+    }
+
+    @Override
+    public List<Pair<String, String>> getHelpParameters()
+    {
+        ArrayList<Pair<String, String>> parameters = new ArrayList<>();
+        parameters.add(new Pair<>("(No Parameters)", "Gives list of countries from page one"));
+        parameters.add(new Pair<>("(Integer) Page Number", "Gives list of countries from specified page"));
+        parameters.add(new Pair<>("(String) Regex", "Gives list of countries that fit a regex pattern"));
+
+        return parameters;
+
+    }
 
 }

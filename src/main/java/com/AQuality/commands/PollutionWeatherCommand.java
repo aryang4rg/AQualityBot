@@ -12,6 +12,7 @@ import net.iakovlev.timeshape.TimeZoneEngine;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.List;
 
 //2 input types, long / lat or city, state, country
@@ -88,5 +89,19 @@ public class PollutionWeatherCommand extends Command
     @Override
     public Command createNew() {
         return new PollutionWeatherCommand();
+    }
+
+    @Override
+    public String getHelpDesc() {
+        return "Gets Pollution and Weather information for a specified place";
+    }
+
+    @Override
+    public List<Pair<String, String>> getHelpParameters() {
+        ArrayList<Pair<String, String>> parameters = new ArrayList<>();
+        parameters.add(new Pair<>("(Double, Double) Latitude Longitude", "Information for specified longitude / latitude"));
+        parameters.add(new Pair<>("(String, String, String) Country, State, City", "Information for specified Country, State, City"));
+        parameters.add(new Pair<>("(String) Description for place", "Tries to get information from description"));
+        return parameters;
     }
 }

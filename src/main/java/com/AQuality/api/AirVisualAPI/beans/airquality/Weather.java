@@ -126,7 +126,15 @@ public class Weather implements Serializable {
 
     public String getWeatherInPhotoForm()
     {
-        return "https://www.airvisual.com/images/" + getIc() + ".png";
+        //i have to manually add these because the api docs are incomplete bruv
+
+        String weatherId = getIc().substring(0,2);
+        if (weatherId.equals("01") || weatherId.equals("02") || weatherId.equals("10"))
+        {
+            return "https://www.airvisual.com/images/" + getIc() + ".png";
+        }
+        return "https://www.airvisual.com/images/" + weatherId + "d.png";
+
     }
 
     public LocalDateTime getTime()
@@ -155,14 +163,17 @@ public class Weather implements Serializable {
                 return "few clouds (night)";
             }
             case ("03d"):
+            case ("03n"):
             {
                 return "scattered clouds";
             }
             case ("04d"):
+            case ("04n"):
             {
                 return "broken clouds";
             }
             case ("09d"):
+            case ("09n"):
             {
                 return "shower rain";
             }
@@ -175,15 +186,17 @@ public class Weather implements Serializable {
                 return "rain (night)";
             }
             case ("11d"):
+            case ("11n"):
             {
                 return "thunderstorm";
             }
             case ("13d"):
+            case ("13n"):
             {
                 return "snow";
             }
             case ("50d"):
-            {
+            case ("50n"): {
                 return "mist";
             }
         }
@@ -205,25 +218,31 @@ public class Weather implements Serializable {
             case ("02d"):
             case ("02n"):
             case ("03d"):
+            case ("03n"):
             case ("04d"):
+            case ("04n"):
             {
                 return "☁";
             }
 
             case ("09d"):
+            case ("09n"):
             case ("10d"):
             case ("10n"): {
                 return "\uD83C\uDF27";
             }
             case ("11d"):
+            case ("11n"):
             {
                 return "\uD83C\uDF29";
             }
             case ("13d"):
+            case ("13n"):
             {
                 return "\uD83C\uDF28";
             }
             case ("50d"):
+            case ("50n"):
             {
                 return "\uD83C\uDF2B";
             }
