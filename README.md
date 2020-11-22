@@ -2,26 +2,27 @@
 A discord bot to help show the air quality and weather, using the AirVisual API to get data. Also uses a little bit of 
 google's geocode api to get information about different locations  
 
-#Motivation
+# Motivation
 I wanted to learn a little bit more about how to use an API, and also wanted to try to learn how to use someone elses libraries 
 for a change. I have also always wanted to make a discord bot but lacked the technical knowledge and / or motivation to start until now. 
 
-#Screenshots
+# Screenshots
+
 ![Example of bot](AirQualitySample.PNG)
 ![Help section of bot](HelpSection.PNG)
 ![Country List section of bot](CountryList.PNG)
 
-#Tech/Framework Used
+# Tech/Framework Used
 Main framework is [Discord4J](https://github.com/Discord4J/Discord4J) api for talking with discord. I also 
 heavily used the [Jackson](https://github.com/FasterXML/jackson) library for JSON parsing 
 
-#Code Example 
+# Code Example 
 The main code base is split into 3 parts, the API connection part (com.AQuality.api), 
 the part where the logic for the commands are (com.AQuality.commands), and 
 the core framework of the code that helps connect discord4J 
 to the overall code base and other important / misc classes(com.AQuality.core)
 
-#License 
+# License 
 
 MIT License
 
