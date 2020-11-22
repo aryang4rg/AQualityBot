@@ -4,8 +4,12 @@ google's geocode api to get information about different locations. You can invit
 [here](https://discord.com/api/oauth2/authorize?client_id=449832399833137153&permissions=0&scope=bot).
 
 # Motivation
-I wanted to learn a little bit more about how to use an API, and also wanted to try to learn how to use someone elses libraries 
-for a change. I have also always wanted to make a discord bot but lacked the technical knowledge and / or motivation to start until now. 
+I wanted to learn a little bit more about how to use an API, and also wanted to try
+ to learn how to use someone elses libraries 
+for a change. I have also always wanted to make a discord bot 
+but lacked the technical knowledge and / or motivation to start until now.
+One thing I really wanted to focus on was trying to create clean reusable code because the last time I made a big 
+project the code was impossible to scale up.  
 
 # Screenshots
 
