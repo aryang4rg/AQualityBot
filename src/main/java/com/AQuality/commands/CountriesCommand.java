@@ -46,13 +46,15 @@ public class CountriesCommand extends Command implements ReactableCommand {
             {
                 throw new UserException("Can not choose a page number under 1");
             }
-            regexParameter = tokensOfMessage.get(0);
         }
         else if (Util.isInputType(tokensOfMessage, String.class, Integer.class))
         {
             regexParameter = tokensOfMessage.get(0);
             pageNumber = Integer.parseInt(tokensOfMessage.get(1) );
-            throw new UserException("unable to parse page number: " + pageNumber + "into a number");
+            if (pageNumber <= 0)
+            {
+                throw new UserException("Can not choose a page number under 1");
+            }
         }
         else if (Util.isInputType(tokensOfMessage, String.class))
         {

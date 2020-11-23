@@ -30,26 +30,6 @@ public class PingCommand extends Command
         }
 
         String finalUrlToPing = urlToPing;
-        try {
-            Runtime r = Runtime.getRuntime();
-            Process p = r.exec("ping " + finalUrlToPing);
-            p.waitFor();
-            BufferedReader b = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String line = "";
-            String totalString = "";
-            while ( (line = b.readLine()) != null )
-            {
-                if (!line.isEmpty())
-                {
-                    totalString += line + "\n";
-                }
-            }
-            b.close();
-            channel.createMessage("```" + totalString + "```").block();
-        } catch (IOException e) {
-            e.printStackTrace();
-            channel.createMessage("There seems to be an internal error. Sorry about that!").block();
-        }
 
         Thread t = new Thread(() -> {
 
@@ -75,6 +55,7 @@ public class PingCommand extends Command
             }
         });
         t.start();
+
 
     }
 
