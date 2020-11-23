@@ -10,14 +10,27 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 
+/**
+ * calls the api for air visual
+ * @param <T> the main bean for which it will transfer its given url contents to using the jackson library
+ */
 public abstract class APICaller<T extends MainBean>
 {
+    /**
+     * url used to connect with and get its content
+     */
     private URL url;
+    /**
+     * url connection of that url
+     */
     private URLConnection connection;
     public static final String AIRVISUALAPIKEY = Util.AIRVISUALAPIKEY;
     ObjectMapper objectMapper = new ObjectMapper();
+    /**
+     * object of the main bean
+     */
     T object;
-    Class<? extends  T> clazz;
+    Class<? extends  T> clazz; //i actually do not know the use of this lmao
 
     public T getObject() {
         return object;

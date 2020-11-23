@@ -7,6 +7,9 @@ import discord4j.core.object.entity.channel.MessageChannel;
 
 import java.util.List;
 
+/**
+ * abstract class that all classes that want to accept commands have to extend
+ */
 public abstract class Command
 {
     /**
@@ -75,7 +78,18 @@ public abstract class Command
      */
     public abstract Command createNew();
 
+    /**
+     * used to get a description of what the command does for the help method
+     * @return description of what this command does
+     */
     public abstract String getHelpDesc();
+
+    /**
+     * gets help documentation on what parameters it takes in
+     * @return a list of all the parameters in a pair, the first pair being the parameters it takes in
+     * in the form of (Class, Class) desc, desc. The second element is a description of what that parameter list
+     * does
+     */
     public abstract  List<Pair<String, String>> getHelpParameters();
 
 }

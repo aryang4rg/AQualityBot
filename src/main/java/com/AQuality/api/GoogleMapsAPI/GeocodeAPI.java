@@ -10,6 +10,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.URL;
 import java.util.HashMap;
 
+/**
+ * Class for connecting with google's geocode api to get long / lat cords from a description
+ */
 public class GeocodeAPI
 {
     private static final String geocodeURL = "https://maps.googleapis.com/maps/api/geocode/json?address=";

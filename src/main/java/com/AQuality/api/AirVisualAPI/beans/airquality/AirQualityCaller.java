@@ -4,6 +4,9 @@ import com.AQuality.api.AirVisualAPI.APICaller;
 
 import java.net.URL;
 
+/**
+ * given a location it will call the air visual api and get its content and dump it into the AirQuality bean
+ */
 public class AirQualityCaller extends APICaller<AirQuality>
 {
     public AirQualityCaller(double latitude, double longitude) throws Exception {

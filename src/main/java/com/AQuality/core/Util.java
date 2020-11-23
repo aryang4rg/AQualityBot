@@ -14,6 +14,12 @@ import java.net.HttpURLConnection;
 import java.net.URLConnection;
 import java.util.*;
 
+
+//TODO break this class into multiple parts, this class is fuffiling way to many functions as it is right now
+
+/**
+ * General Util class for the project. Also helps connect the command classes with actual commands
+ */
 public class Util
 {
     /**
@@ -47,7 +53,7 @@ public class Util
     /**
      * Given a String that only includes the command given by the User, it would return the proper class to deal with the command
      */
-    public static Map<String, Command> commandToConsumer= new TreeMap<>();
+    public static Map<String, Command> commandToConsumer;
 
     /**
      * list used for when keeping track of reactable messages, when a message is reacted too it will check if that message is in this TreeMap, and if it is it will call the right method for the ReactableCommand
@@ -150,17 +156,26 @@ public class Util
      */
     public static void commandToConsumerFactory()
     {
+        commandToConsumer = new TreeMap<>();
         commandToConsumer.put("countries", new CountriesCommand());
         commandToConsumer.put("pollution", new PollutionWeatherCommand());
         commandToConsumer.put("weather", new PollutionWeatherCommand());
         commandToConsumer.put("help", new HelpCommand());
         commandToConsumer.put("donate", new DonateCommand());
         commandToConsumer.put("ping", new PingCommand());
-        commandToConsumer.put("invite", new InviteCommand());
+        commandToConsumer.put("links", new LinksCommand());
+        commandToConsumer.put("invite", new LinksCommand());
+
     }
 
+    /**
+     * Basically a carbon copy as the command to consumer map except no aliases
+     */
     public static Map<String, Command> commandNamesForHelpCommand;
 
+    /**
+     * used to initialize the commandNamesForHelpCommand Map
+     */
     public static void commandNamesForHelpCommandFactory()
     {
         commandNamesForHelpCommand = new TreeMap<>();
@@ -169,8 +184,7 @@ public class Util
         commandNamesForHelpCommand.put("help", new HelpCommand());
         commandNamesForHelpCommand.put("donate", new DonateCommand());
         commandNamesForHelpCommand.put("ping", new PingCommand());
-        commandNamesForHelpCommand.put("invite", new InviteCommand());
-
+        commandNamesForHelpCommand.put("links / invite", new LinksCommand());
     }
 
     /**

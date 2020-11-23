@@ -1,5 +1,8 @@
 package com.AQuality.core;
 
+/**
+ * used to get the credentials found in the resources folder.
+ */
 public class Credentials {
 
     private String airVisualApiKey;

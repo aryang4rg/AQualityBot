@@ -1,5 +1,10 @@
 package com.AQuality.core;
 
+/**
+ * general pair class
+ * @param <K> first value type
+ * @param <V> second value type
+ */
 public class Pair<K,V>
 {
     K val1;

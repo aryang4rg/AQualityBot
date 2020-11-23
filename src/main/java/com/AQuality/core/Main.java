@@ -12,7 +12,9 @@ import discord4j.discordjson.json.ActivityUpdateRequest;
 import discord4j.discordjson.json.gateway.StatusUpdate;
 import org.apache.log4j.BasicConfigurator;
 
-
+/**
+ * main method, where the thread starts
+ */
 public class Main {
 
     public static void main(String[] args) {

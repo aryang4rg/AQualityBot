@@ -15,7 +15,9 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
-//2 input types, long / lat or city, state, country
+/**
+ * Command for getting the pollution and weather information given a location
+ */
 public class PollutionWeatherCommand extends Command
 {
     @Override

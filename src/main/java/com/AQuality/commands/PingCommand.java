@@ -11,6 +11,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * command for getting the ping of the current bot to a specified url / discord.gg
+ */
 public class PingCommand extends Command
 {
     @Override

@@ -9,6 +9,9 @@ import discord4j.rest.util.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Help command that lists all of the commands this bot takes
+ */
 public class HelpCommand extends Command{
 
     @Override

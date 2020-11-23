@@ -10,6 +10,9 @@ import discord4j.rest.util.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Command for user donations
+ */
 public class DonateCommand extends Command
 {
     @Override

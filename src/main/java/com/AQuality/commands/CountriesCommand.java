@@ -16,6 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+//todo: this classes code is very messy
+
+/**
+ * Command for getting a list of all supported countries of the Air Visual API
+ */
 public class CountriesCommand extends Command implements ReactableCommand {
 
     private CountriesCaller list;
