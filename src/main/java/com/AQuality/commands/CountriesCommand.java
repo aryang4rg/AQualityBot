@@ -38,6 +38,7 @@ public class CountriesCommand extends Command implements ReactableCommand {
     public void acceptImpl(MessageCreateEvent messageCreateEvent, MessageChannel channel) throws Exception {
         list = new CountriesCaller();
         List<String> tokensOfMessage = Util.getInputParams(messageCreateEvent.getMessage().getContent());
+
         if (Util.isInputType(tokensOfMessage, Integer.class))
         {
             pageNumber = Integer.parseInt(tokensOfMessage.get(0));
@@ -52,6 +53,10 @@ public class CountriesCommand extends Command implements ReactableCommand {
             regexParameter = tokensOfMessage.get(0);
             pageNumber = Integer.parseInt(tokensOfMessage.get(1) );
             throw new UserException("unable to parse page number: " + pageNumber + "into a number");
+        }
+        else if (Util.isInputType(tokensOfMessage, String.class))
+        {
+            regexParameter = tokensOfMessage.get(0);
         }
 
 
@@ -158,7 +163,7 @@ public class CountriesCommand extends Command implements ReactableCommand {
         {
             for (int i = numberOfElementsPerPage*(pageNumber -1); i < countriesThatMatchRegex.size() && i < pageNumber * numberOfElementsPerPage; i++)
             {
-                desc += countriesThatMatchRegex.get(i) + Util.countryNameToEmoji( countriesThatMatchRegex.get(i) ) + ",\n";
+                desc += countriesThatMatchRegex.get(i) + " " + Util.countryNameToEmoji( countriesThatMatchRegex.get(i) ) + ",\n";
             }
             if (desc.length() == 0)
             {

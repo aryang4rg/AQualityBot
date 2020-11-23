@@ -39,6 +39,9 @@ public class Util
      */
     public static final String GOOGLEMAPSAPIKEY;
 
+    /**
+     * author of discord bot (me!)
+     */
     public static final Snowflake AuthorId = Snowflake.of(285300064602030080L);
 
     /**
@@ -51,12 +54,14 @@ public class Util
      */
     public static Map<String, String> countryCodes = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     /**
-     * Given a String that only includes the command given by the User, it would return the proper class to deal with the command
+     * Given a String that only includes the command given by the User, it would
+     * return the proper class to deal with the command
      */
     public static Map<String, Command> commandToConsumer;
 
     /**
-     * list used for when keeping track of reactable messages, when a message is reacted too it will check if that message is in this TreeMap, and if it is it will call the right method for the ReactableCommand
+     * list used for when keeping track of reactable messages, when a message is reacted too it will
+     * check if that message is in this TreeMap, and if it is it will call the right method for the ReactableCommand
      */
     private static TreeMap<Snowflake, ReactableCommand> reactToConsumer = new TreeMap<>();
 
@@ -139,7 +144,7 @@ public class Util
         ObjectMapper objectMapper = new ObjectMapper();
         Credentials creds = null;
         try {
-            creds = objectMapper.readValue(new File("src/main/resources/config.json"), Credentials.class);
+            creds = objectMapper.readValue(Util.class.getClassLoader().getResource("config.json"), Credentials.class);
         }
         catch (Exception e)
         {

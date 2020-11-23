@@ -61,7 +61,6 @@ public abstract class Command
             e.printStackTrace();
             //TODO add a logging function here
         }
-
     }
 
     /**

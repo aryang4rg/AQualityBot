@@ -24,8 +24,33 @@ public class PingCommand extends Command
         {
             urlToPing = Util.getInputParams(obj.getMessage().getContent()).get(0);
         }
+        else if (!Util.isInputType(Util.getInputParams(obj.getMessage().getContent())))
+        {
+            throw new UserException("Unable to parse parameters, invalid input");
+        }
 
         String finalUrlToPing = urlToPing;
+        try {
+            Runtime r = Runtime.getRuntime();
+            Process p = r.exec("ping " + finalUrlToPing);
+            p.waitFor();
+            BufferedReader b = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line = "";
+            String totalString = "";
+            while ( (line = b.readLine()) != null )
+            {
+                if (!line.isEmpty())
+                {
+                    totalString += line + "\n";
+                }
+            }
+            b.close();
+            channel.createMessage("```" + totalString + "```").block();
+        } catch (IOException e) {
+            e.printStackTrace();
+            channel.createMessage("There seems to be an internal error. Sorry about that!").block();
+        }
+
         Thread t = new Thread(() -> {
 
             try {
@@ -50,6 +75,7 @@ public class PingCommand extends Command
             }
         });
         t.start();
+
     }
 
     @Override

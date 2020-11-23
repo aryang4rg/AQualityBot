@@ -40,7 +40,7 @@ public class PollutionWeatherCommand extends Command
         }
         else
         {
-            return;
+            throw new UserException("Unable to parse parameters, invalid input");
         }
 
         channel.createEmbed(spec ->
@@ -50,13 +50,13 @@ public class PollutionWeatherCommand extends Command
             spec.addField("Location",
                     "Latitude: " + data.getLocation().getRoundedLatitude() + "\n" +
                             "Longitude: " + data.getLocation().getRoundedLongitude() + "\n" +
-                            "Country: " + data.getCountry() + "\n" +
+                            "Country: " + data.getCountry() + " " + Util.countryNameToEmoji(data.getCountry())+ "\n" +
                             "State: " + data.getState() + "\n" +
                             "City: " + data.getCity() + "\n"
                     , false);
             spec.addField("Weather",
                     "Weather: " + data.getWeather().getWeatherInDescriptionForm() + " " + data.getWeather().getWeatherInEmojiForm() + "\n" +
-                            "Temperature: " + data.getWeather().getTemperatureC() + " C° / " +  data.getWeather().getTemperatureF() + "F°\n" +
+                            "Temperature: **" + data.getWeather().getTemperatureC() + " C° / " +  data.getWeather().getTemperatureF() + " F°**\n" +
                             "Atmospheric Pressure: " + data.getWeather().getAtmosphericPressure() + " hPa\n" +
                             "Humidity: " + data.getWeather().getHumidity() + " %\n" +
                             "Wind Speed: " + data.getWeather().getWindSpeed() + " m/s\n" +
@@ -66,7 +66,7 @@ public class PollutionWeatherCommand extends Command
             spec.setThumbnail(data.getWeather().getWeatherInPhotoForm());
 
             spec.addField("Air Pollution",
-                    "AQI Rating: " + data.getPollution().getAqi() + ", " + data.getPollution().getDescriptionOfAqi() + "\n" +
+                    "AQI Rating: **" + data.getPollution().getAqi() + "**, " + data.getPollution().getDescriptionOfAqi() + "\n" +
                             "Main Pollutant: " + data.getPollution().getFullNameOfPollutant()
                     ,false);
 
